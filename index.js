@@ -17,7 +17,7 @@ const createTableQuery = `CREATE TABLE IF NOT EXISTS Users (Userid int NOT NULL 
 
 const createUserQuery = `INSERT INTO Users (Name) VALUES ('Alvaro');`
 
-const selectUserQuery = `SELECT name FROM Users WHERE name = 'Alvaro';`
+const selectUserQuery = `SELECT Userid, name FROM Users WHERE name = 'Alvaro';`
 
 
 app.get('/', (req, res) => {
@@ -33,8 +33,16 @@ app.get('/', (req, res) => {
     });
     con.query(selectUserQuery, function (err, result) {
       if (err) throw err;
-      const user = result[0].name
-      res.send(`FullCycle rocks and so does ${user}`)
+      const users = result
+      res.write(`<head><meta charset="UTF-8">
+    </head>`)
+      res.write("<h1>Full Cycle Rocks!<h1>")
+      res.write("<h2>Lista de usuários cadastrados</h2>")
+
+      for (let user of users) {
+        res.write(`<p>${user.Userid} - ${user.name}</p>`)
+      }
+      res.send()
     });
   });
 });
