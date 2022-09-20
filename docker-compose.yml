@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+  node:
+    image: tserewara/desafio-node
+    container_name: nodeapp
+    networks:
+      - node_network
+    tty: true
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+
+  db:
+    image: mysql:5.7
+    command: --innodb-use-native-aio=0
+    container_name: db
+    restart: always
+    tty: true
+    volumes:
+      - ./mysql:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=nodedb
+      - MYSQL_ROOT_PASSWORD=root
+    networks:
+      - node_network
+    ports:
+      - "3306:3306"
+  nginx:
+    image: nginx:mainline-alpine
+    container_name: nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    depends_on:
+      - node
+    networks:
+      - node_network
+
+networks:
+  node_network:
+    driver: bridge
