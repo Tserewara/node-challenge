@@ -34,7 +34,7 @@ app.get('/', (req, res) => {
     con.query(selectUserQuery, function (err, result) {
       if (err) throw err;
       const user = result[0].name
-      res.send(`${user} rocks`)
+      res.send(`FullCycle rocks and so does ${user}`)
     });
   });
 });
